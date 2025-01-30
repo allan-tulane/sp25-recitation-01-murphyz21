@@ -34,6 +34,24 @@ def _binary_search(mylist, key, left, right):
 	"""
 	### TODO
 
+	# This is the base case
+	if left > right: 
+		return -1
+	# This determines the middle number
+	middle = (left + right) // 2
+
+	# If the middle of the list is the key, return that middle value
+	if mylist[middle] == key:
+		return middle
+
+	# If the middle of the list is less than the key, search the right half of the list
+	elif mylist[middle] > key:
+		# Recursive call to keep the whole process going again (but the middle space has shifted)
+		return _binary_search(mylist, key, left, middle-1)
+	# If the middle of the list is greater than the key, search the left half of the list
+	else:
+		return _binary_search(mylist, key, middle+1, right)
+
 	###
 
 
@@ -58,7 +76,13 @@ def time_search(search_fn, mylist, key):
 	  search function on this input.
 	"""
 	### TODO
-
+	start = time.time() # Takes note of the start time
+	search_fn(mylist, key) # Runs the search function
+	end = time.time() # Takes note of the end time
+	seconds = end - start # Gives us the seconds it took to run the search function
+	milliseconds = seconds * 1000 # Puts seconsds into milliseconds
+	return milliseconds # Returns the milliseconds it took to run the search function on the list
+	
 	###
 
 def compare_search(sizes=[1e1, 1e2, 1e3, 1e4, 1e5, 1e6, 1e7]):
@@ -77,6 +101,20 @@ def compare_search(sizes=[1e1, 1e2, 1e3, 1e4, 1e5, 1e6, 1e7]):
 	  for each method to run on each value of n
 	"""
 	### TODO
+	# Creates a list for us to add the tuples into 
+	results = []
+	# For loop that runs through the input size list
+	for size in sizes:
+		# Makes the sizes an int and easier to work with
+		n = int(size)
+		# Creates a list of numbers from 0 to n-1
+		mylist = list(range(n))
+		# Creates the linear_serach_time variables with the required parameters
+		linear_search_time = time_search(linear_search, mylist, -1)
+		binary_search_time = time_search(binary_search, mylist, -1)
+		# Adds the result tuples from the linear_search_time and binary_search_time into the results list
+		results.append((n, linear_search_time, binary_search_time))
+	return results
 
 	###
 
@@ -86,4 +124,5 @@ def print_results(results):
 							headers=['n', 'linear', 'binary'],
 							floatfmt=".3f",
 							tablefmt="github"))
+
 
